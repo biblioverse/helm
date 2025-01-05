@@ -78,7 +78,7 @@ spec:
               port:  {{ $.Values.biblioteca.containerPort }}
               httpHeaders:
               - name: Host
-                value: {{ $.Values.biblioteca.host | quote }}
+                value: {{ $.Values.ingress.host | quote }}
             initialDelaySeconds: {{ .initialDelaySeconds }}
             periodSeconds: {{ .periodSeconds }}
             timeoutSeconds: {{ .timeoutSeconds }}
@@ -94,7 +94,7 @@ spec:
               port:  {{ $.Values.biblioteca.containerPort }}
               httpHeaders:
               - name: Host
-                value: {{ $.Values.biblioteca.host | quote }}
+                value: {{ $.Values.ingress.host | quote }}
             initialDelaySeconds: {{ .initialDelaySeconds }}
             periodSeconds: {{ .periodSeconds }}
             timeoutSeconds: {{ .timeoutSeconds }}
@@ -110,7 +110,7 @@ spec:
               port:  {{ $.Values.biblioteca.containerPort }}
               httpHeaders:
               - name: Host
-                value: {{ $.Values.biblioteca.host | quote }}
+                value: {{ $.Values.ingress.host | quote }}
             initialDelaySeconds: {{ .initialDelaySeconds }}
             periodSeconds: {{ .periodSeconds }}
             timeoutSeconds: {{ .timeoutSeconds }}

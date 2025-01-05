@@ -68,12 +68,13 @@ jobs:
       matrix:
         # each item in this list is a job with an isolated test VM
         test_cases:
-          # test the plain helm chart with nothing changed
-          - name: 'Default - no custom values'
-
           # test the helm chart with MariaDB subchart enabled
-          - name: MariaDB
-            helm_args: '--helm-extra-set-args "--values charts/biblioteca/test-values/mariadb.yaml"'
+          - name: 'Default - no custom values'
+            test: true
+
+          # test the helm chart with external DB
+          - name: External DB
+            helm_args: '--helm-extra-set-args "--values charts/biblioteca/test-values/external_db.yaml"'
 
 
     steps:

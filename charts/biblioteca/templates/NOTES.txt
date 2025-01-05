@@ -1,0 +1,8 @@
+1. Get the Biblioteca URL by running:
+
+{{- if eq .Values.service.type "ClusterIP" }}
+  echo http://127.0.0.1:8080/
+  kubectl port-forward --namespace {{ .Release.Namespace }} service/{{ template "biblioteca.fullname" . }} 8080:8080
+{{- else }}
+  echo http://{{ .Values.ingress.host }}/
+{{- end }}

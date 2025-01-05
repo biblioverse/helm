@@ -126,26 +126,14 @@ biblioteca:
 externalDatabase:
   enabled: false
 
-  ## Database host. You can optionally include a colon delimited port like "myhost:1234"
-  host: ""
-
-  ## Database user
-  user: biblioteca
-
-  ## Database password
-  password: ""
-
-  ## Database name
-  database: biblioteca
+  ## Database url
+  url: ""
 
   ## Use a existing secret
   existingSecret:
     enabled: false
-    # secretName: nameofsecret
-    usernameKey: db-username
-    passwordKey: db-password
-    # hostKey: db-hostname-or-ip
-    # databaseKey: db-name
+    #secretName: nameofsecret
+    urlKey: url
 
 ##
 ## MariaDB chart configuration
@@ -155,7 +143,7 @@ mariadb:
   ## Whether to deploy a mariadb server from the bitnami mariab db helm chart
   # to satisfy the applications database requirements. if you want to deploy this bitnami mariadb, set this and externalDatabase to true
   # To use an ALREADY DEPLOYED mariadb database, set this to false and configure the externalDatabase parameters
-  enabled: false
+  enabled: true
 
   # see: https://github.com/bitnami/charts/tree/main/bitnami/mariadb#global-parameters
   global:

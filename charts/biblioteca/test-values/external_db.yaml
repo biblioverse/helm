@@ -1,0 +1,6 @@
+mariadb:
+  enabled: false
+
+externalDatabase:
+  enabled: true
+  url: "mysql://biblioteca:biblioteca@external-db:3306/biblioteca?charset=utf8"

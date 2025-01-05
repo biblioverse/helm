@@ -56,51 +56,23 @@ Create image name that is used in the deployment
 {{/*
 Create environment variables used to configure the biblioteca container.
 */}}
+
 {{- define "biblioteca.env" -}}
+- name: DATABASE_URL
 {{- if .Values.mariadb.enabled }}
-- name: MYSQL_HOST
-  value: {{ template "mariadb.primary.fullname" .Subcharts.mariadb }}
-- name: MYSQL_DATABASE
-  value: {{ .Values.mariadb.auth.database | quote }}
-- name: MYSQL_USER
   valueFrom:
     secretKeyRef:
-      name: {{ .Values.externalDatabase.existingSecret.secretName | default (printf "%s-db" .Release.Name) }}
-      key: {{ .Values.externalDatabase.existingSecret.usernameKey }}
-- name: MYSQL_PASSWORD
-  valueFrom:
-    secretKeyRef:
-      name: {{ .Values.externalDatabase.existingSecret.secretName | default (printf "%s-db" .Release.Name) }}
-      key: {{ .Values.externalDatabase.existingSecret.passwordKey }}
+      name: {{ printf "%s-db" .Release.Name }}
+      key: url
 {{- else }}
-- name: MYSQL_HOST
-  {{- if .Values.externalDatabase.existingSecret.hostKey }}
+  {{- if .Values.externalDatabase.existingSecret.enabled }}
   valueFrom:
     secretKeyRef:
       name: {{ .Values.externalDatabase.existingSecret.secretName | default (printf "%s-db" .Release.Name) }}
-      key: {{ .Values.externalDatabase.existingSecret.hostKey }}
+      key: {{ .Values.externalDatabase.existingSecret.urlKey | default "url" }}
   {{- else }}
-  value: {{ .Values.externalDatabase.host | quote }}
+  value: {{ .Values.externalDatabase.url | quote }}
   {{- end }}
-- name: MYSQL_DATABASE
-  {{- if .Values.externalDatabase.existingSecret.databaseKey }}
-  valueFrom:
-    secretKeyRef:
-      name: {{ .Values.externalDatabase.existingSecret.secretName | default (printf "%s-db" .Release.Name) }}
-      key: {{ .Values.externalDatabase.existingSecret.databaseKey }}
-  {{- else }}
-  value: {{ .Values.externalDatabase.database | quote }}
-  {{- end }}
-- name: MYSQL_USER
-  valueFrom:
-    secretKeyRef:
-      name: {{ .Values.externalDatabase.existingSecret.secretName | default (printf "%s-db" .Release.Name) }}
-      key: {{ .Values.externalDatabase.existingSecret.usernameKey }}
-- name: MYSQL_PASSWORD
-  valueFrom:
-    secretKeyRef:
-      name: {{ .Values.externalDatabase.existingSecret.secretName | default (printf "%s-db" .Release.Name) }}
-      key: {{ .Values.externalDatabase.existingSecret.passwordKey }}
 {{- end }}
 {{- if .Values.biblioteca.extraEnv }}
 {{ toYaml .Values.biblioteca.extraEnv }}

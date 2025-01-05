@@ -75,6 +75,7 @@ The following table lists the configurable parameters of the Biblioteca chart an
 | `image.pullSecrets`                               | Specify image pull secrets                                                              | `nil`                                   |
 | `replicaCount`                                    | Number of biblioteca pods to deploy                                                     | `1`                                     |
 | `ingress.className`                               | Name of the ingress class to use                                                        | `nil`                                   |
+| `ingress.host`                                    | Host Ingress                                                                            | `nil`                                   |
 | `ingress.enabled`                                 | Enable use of ingress controllers                                                       | `false`                                 |
 | `ingress.servicePort`                             | Ingress' backend servicePort                                                            | `http`                                  |
 | `ingress.annotations`                             | An array of service annotations                                                         | `nil`                                   |
@@ -120,33 +121,26 @@ For instance, if you choose to use the Bitnami PostgreSQL chart that we've prepa
 You do not need to use the Bitnami helm charts.
 If you want to use an already configured database that you have externally, just configure the `externalDatabase` parameters below.
 
-| Parameter                                     | Description                                                                       | Default           |
-| --------------------------------------------- | --------------------------------------------------------------------------------- | ----------------- |
-| `externalDatabase.enabled`                    | Whether to use external database                                                  | `false`           |
-| `externalDatabase.type`                       | External database type: `mysql`, `postgresql`                                     | `mysql`           |
-| `externalDatabase.host`                       | Host of the external database in form of `host:port`. Example: `"myhost:1234"`    | `""`              |
-| `externalDatabase.database`                   | Name of the existing database                                                     | `biblioteca`      |
-| `externalDatabase.user`                       | Existing username in the external db                                              | `biblioteca`      |
-| `externalDatabase.password`                   | Password for the above username                                                   | `nil`             |
-| `externalDatabase.existingSecret.enabled`     | Whether to use a existing secret or not                                           | `false`           |
-| `externalDatabase.existingSecret.secretName`  | Name of the existing secret                                                       | `nil`             |
-| `externalDatabase.existingSecret.usernameKey` | Name of the key that contains the username                                        | `nil`             |
-| `externalDatabase.existingSecret.passwordKey` | Name of the key that contains the password                                        | `nil`             |
-| `externalDatabase.existingSecret.hostKey`     | Name of the key that contains the database hostname or IP address                 | `nil`             |
-| `externalDatabase.existingSecret.databaseKey` | Name of the key that contains the database name                                   | `nil`             |
-| `mariadb.enabled`                             | Whether to use the MariaDB chart                                                  | `false`           |
-| `mariadb.auth.database`                       | Database name to create                                                           | `biblioteca`      |
-| `mariadb.auth.username`                       | Database user to create                                                           | `biblioteca`      |
-| `mariadb.auth.password`                       | Password for the database                                                         | `changeme`        |
-| `mariadb.auth.rootPassword`                   | MariaDB admin password                                                            | `nil`             |
-| `mariadb.auth.existingSecret`                 | Use existing secret for MariaDB password details; see values.yaml for more detail | `''`              |
-| `mariadb.image.registry`                      | MariaDB image registry                                                            | `docker.io`       |
-| `mariadb.image.repository`                    | MariaDB image repository                                                          | `bitnami/mariadb` |
-| `mariadb.image.tag`                           | MariaDB image tag                                                                 | ``                |
-| `mariadb.global.defaultStorageClass`          | MariaDB Global default StorageClass for Persistent Volume(s)                      | `''`              |
-| `mariadb.primary.persistence.enabled`         | Whether or not to Use a PVC on MariaDB primary                                    | `false`           |
-| `mariadb.primary.persistence.storageClass`    | MariaDB primary persistent volume storage Class                                   | `''`              |
-| `mariadb.primary.persistence.existingClaim`   | Use an existing PVC for MariaDB primary                                           | `''`              |
+| Parameter                                    | Description                                                                       | Default           |
+| -------------------------------------------- | --------------------------------------------------------------------------------- | ----------------- |
+| `externalDatabase.enabled`                   | Whether to use external database                                                  | `false`           |
+| `externalDatabase.url`                       | URL to the external DB. Example: `"mysql://user:pass@host/db"`                    | `""`              |
+| `externalDatabase.existingSecret.enabled`    | Whether to use a existing secret or not                                           | `false`           |
+| `externalDatabase.existingSecret.secretName` | Name of the existing secret                                                       | `nil`             |
+| `externalDatabase.existingSecret.urlKey`     | Name of the key that contains the DB URL                                          | `url`             |
+| `mariadb.enabled`                            | Whether to use the MariaDB chart                                                  | `false`           |
+| `mariadb.auth.database`                      | Database name to create                                                           | `biblioteca`      |
+| `mariadb.auth.username`                      | Database user to create                                                           | `biblioteca`      |
+| `mariadb.auth.password`                      | Password for the database                                                         | `changeme`        |
+| `mariadb.auth.rootPassword`                  | MariaDB admin password                                                            | `nil`             |
+| `mariadb.auth.existingSecret`                | Use existing secret for MariaDB password details; see values.yaml for more detail | `''`              |
+| `mariadb.image.registry`                     | MariaDB image registry                                                            | `docker.io`       |
+| `mariadb.image.repository`                   | MariaDB image repository                                                          | `bitnami/mariadb` |
+| `mariadb.image.tag`                          | MariaDB image tag                                                                 | ``                |
+| `mariadb.global.defaultStorageClass`         | MariaDB Global default StorageClass for Persistent Volume(s)                      | `''`              |
+| `mariadb.primary.persistence.enabled`        | Whether or not to Use a PVC on MariaDB primary                                    | `false`           |
+| `mariadb.primary.persistence.storageClass`   | MariaDB primary persistent volume storage Class                                   | `''`              |
+| `mariadb.primary.persistence.existingClaim`  | Use an existing PVC for MariaDB primary                                           | `''`              |
 
 Is there a missing parameter for one of the Bitnami helm charts listed above? Please feel free to submit a PR to add that parameter in our values.yaml, but be sure to also update this README file :)
 

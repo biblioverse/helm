@@ -1,8 +1,0 @@
-mariadb:
-  enabled: true
-  auth:
-    password: "biblioteca"
-
-externalDatabase:
-  enabled: true
-  password: "biblioteca"
