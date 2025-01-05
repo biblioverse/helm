@@ -1,0 +1,30 @@
+{{- if and .Values.persistenceTmpCovers.enabled (not .Values.persistenceTmpCovers.existingClaim) }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ template "biblioteca.fullname" . }}-covers-tmp
+  labels:
+    app.kubernetes.io/name: {{ include "biblioteca.name" . }}
+    helm.sh/chart: {{ include "biblioteca.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/component: app
+  annotations:
+    helm.sh/resource-policy: keep
+  {{- with .Values.persistenceTmpCovers.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .Values.persistenceTmpCovers.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.persistenceTmpCovers.size | quote }}
+  {{- with .Values.persistenceTmpCovers.storageClass }}
+  {{- if (eq "-" .) }}
+  storageClassName: ""
+  {{- else }}
+  storageClassName: "{{ . }}"
+  {{- end }}
+  {{- end }}
+{{- end }}

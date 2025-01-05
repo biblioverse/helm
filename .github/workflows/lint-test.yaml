@@ -71,13 +71,9 @@ jobs:
           # test the plain helm chart with nothing changed
           - name: 'Default - no custom values'
 
-          # test the helm chart with postgresql subchart enabled
-          - name: PostgreSQL Enabled
-            helm_args: '--helm-extra-set-args "--values charts/biblioteca/test-values/postgresql.yaml"'
-
-          # test the helm chart with nginx container enabled
-          - name: Nginx Enabled
-            helm_args: '--helm-extra-set-args "--values charts/biblioteca/test-values/nginx.yaml"'
+          # test the helm chart with MariaDB subchart enabled
+          - name: MariaDB
+            helm_args: '--helm-extra-set-args "--values charts/biblioteca/test-values/mariadb.yaml"'
 
 
     steps:
