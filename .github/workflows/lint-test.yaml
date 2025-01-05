@@ -6,7 +6,7 @@ on:
 
 jobs:
   changes:
-    runs-on: ubuntu-latest-low
+    runs-on: ubuntu-24.04
 
     outputs:
       src: ${{ steps.changes.outputs.src}}
