@@ -23,7 +23,7 @@ jobs:
               - 'charts/biblioteca/templates/**'
 
   lint:
-    runs-on: ubuntu-latest-low
+    runs-on: ubuntu-24.04
     needs: changes
     if: needs.changes.outputs.src != 'false'
     steps:
@@ -127,7 +127,7 @@ jobs:
             exit $EXIT
 
   summary:
-    runs-on: ubuntu-latest-low
+    runs-on: ubuntu-24.04
     needs: [changes, test]
     if: always()
     steps:
