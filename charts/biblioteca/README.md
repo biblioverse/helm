@@ -197,13 +197,13 @@ The Biblioteca deployment includes a series of different probes you can use to d
 
 | Parameter                            | Description                                 | Default |
 | ------------------------------------ | ------------------------------------------- | ------- |
-| `livenessProbe.enabled`              | Turn on and off liveness probe              | `true`  |
+| `livenessProbe.enabled`              | Turn on and off liveness probe              | `false` |
 | `livenessProbe.initialDelaySeconds`  | Delay before liveness probe is initiated    | `10`    |
 | `livenessProbe.periodSeconds`        | How often to perform the probe              | `10`    |
 | `livenessProbe.timeoutSeconds`       | When the probe times out                    | `5`     |
 | `livenessProbe.failureThreshold`     | Minimum consecutive failures for the probe  | `3`     |
 | `livenessProbe.successThreshold`     | Minimum consecutive successes for the probe | `1`     |
-| `readinessProbe.enabled`             | Turn on and off readiness probe             | `true`  |
+| `readinessProbe.enabled`             | Turn on and off readiness probe             | `false` |
 | `readinessProbe.initialDelaySeconds` | Delay before readiness probe is initiated   | `10`    |
 | `readinessProbe.periodSeconds`       | How often to perform the probe              | `10`    |
 | `readinessProbe.timeoutSeconds`      | When the probe times out                    | `5`     |
