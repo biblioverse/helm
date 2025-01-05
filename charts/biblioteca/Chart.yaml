@@ -11,8 +11,11 @@ keywords:
 - comics
 - ebooks
 - php
-maintainers: []
+maintainers:
+  - name: onigoetz
+    email: stephane.goetz@onigoetz.ch
 name: biblioteca
 sources:
+- https://github.com/biblioverse/helm
 - https://github.com/biblioverse/biblioteca-docker
 version: 0.1.0
