@@ -1,0 +1,35 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: test-biblioteca
+  namespace: biblioteca
+spec:
+  template:
+    metadata:
+      name: test-biblioteca
+    spec:
+      initContainers:
+        - name: 01-show-login
+          image: curlimages/curl
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -e
+              echo "show login:"
+              curl \
+                -s \
+                -w "%{http_code}" \
+              "http://biblioteca.biblioteca.svc.cluster.local:8080/login" || exit 1;
+              echo "done"
+      containers:
+        - name: final
+          image: curlimages/curl
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -e
+              echo "All tests run successfull (initContainer in given order)"
+      restartPolicy: Never

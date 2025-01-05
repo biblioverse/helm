@@ -1,0 +1,139 @@
+name: Lint and Test Charts
+
+on:
+  pull_request:
+    paths:
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest-low
+
+    outputs:
+      src: ${{ steps.changes.outputs.src}}
+
+    steps:
+      - uses: dorny/paths-filter@de90cc6fb38fc0963ad72b210f1f284cd68cea36 # v3.0.2
+        id: changes
+        continue-on-error: true
+        with:
+          filters: |
+            src:
+              - 'charts/biblioteca/Chart.yaml'
+              - 'charts/biblioteca/values.yaml'
+              - 'charts/biblioteca/templates/**'
+
+  lint:
+    runs-on: ubuntu-latest-low
+    needs: changes
+    if: needs.changes.outputs.src != 'false'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: v3.14.4
+
+      - name: Add dependency chart repos
+        run: |
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+
+      - name: Set up chart-testing
+        uses: helm/chart-testing-action@v2.6.1
+
+      - name: Run chart-testing (list-changed)
+        id: list-changed
+        run: |
+          changed=$(ct list-changed --target-branch ${{ github.event.repository.default_branch }})
+          if [[ -n "$changed" ]]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run chart-testing (lint)
+        id: lint
+        if: steps.list-changed.outputs.changed == 'true'
+        run: ct lint --target-branch ${{ github.event.repository.default_branch }}
+
+  test:
+    runs-on: ubuntu-24.04
+    needs: [changes, lint]
+    # only run this job if there are helm chart file changes
+    if: needs.changes.outputs.src != 'false'
+    strategy:
+      # continue with all the other jobs even if one fails
+      fail-fast: false
+      matrix:
+        # each item in this list is a job with an isolated test VM
+        test_cases:
+          # test the plain helm chart with nothing changed
+          - name: 'Default - no custom values'
+
+          # test the helm chart with postgresql subchart enabled
+          - name: PostgreSQL Enabled
+            helm_args: '--helm-extra-set-args "--values charts/biblioteca/test-values/postgresql.yaml"'
+
+          # test the helm chart with nginx container enabled
+          - name: Nginx Enabled
+            helm_args: '--helm-extra-set-args "--values charts/biblioteca/test-values/nginx.yaml"'
+
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: v3.14.4
+
+      - name: Add dependency chart repos
+        run: |
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+
+      - name: Set up chart-testing
+        uses: helm/chart-testing-action@v2.6.1
+
+      - name: Run chart-testing (list-changed)
+        id: list-changed
+        run: |
+          changed=$(ct list-changed --target-branch ${{ github.event.repository.default_branch }})
+          if [[ -n "$changed" ]]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create kind cluster
+        uses: helm/kind-action@v1.12.0
+        if: steps.list-changed.outputs.changed == 'true'
+
+      - name: Run chart-testing (install ${{ matrix.test_cases.name }})
+        id: install
+        if: steps.list-changed.outputs.changed == 'true'
+        run: ct install --target-branch ${{ github.event.repository.default_branch }} ${{ matrix.test_cases.helm_args }}
+
+      - name: Run test for Biblioteca
+        if: matrix.test_cases.test
+        # applies a kubernetes job that uploads a file and then checks log of finished pod
+        run: |
+            EXIT=0
+            kubectl config set-context --current --namespace=biblioteca && \
+            kubectl apply -f ./.github/tests/test_job.yaml --wait=true && \
+            sleep 2 && \
+            kubectl wait --for=condition=Complete --timeout=2m job/test-biblioteca || EXIT=1
+            echo "Here's the logs from the job:"
+            kubectl logs --ignore-errors --prefix --tail=-1 --all-containers=true -l batch.kubernetes.io/job-name=test-biblioteca
+            echo "Here's the logs from the biblioteca pod:"
+            kubectl logs --ignore-errors --prefix -l app.kubernetes.io/name=biblioteca
+            exit $EXIT
+
+  summary:
+    runs-on: ubuntu-latest-low
+    needs: [changes, test]
+    if: always()
+    steps:
+      - name: Summary
+        run: if ${{ needs.changes.outputs.src != 'false' && needs.test.result != 'success' }}; then exit 1; fi
