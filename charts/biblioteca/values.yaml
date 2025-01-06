@@ -132,7 +132,7 @@ externalDatabase:
   ## Use a existing secret
   existingSecret:
     enabled: false
-    #secretName: nameofsecret
+    # secretName: nameofsecret
     urlKey: url
 
 ##
