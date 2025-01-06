@@ -123,6 +123,8 @@ jobs:
         run: |
             EXIT=0
             kubectl config set-context --current --namespace=biblioteca && \
+            kubectl wait --for=condition=Ready --timeout=300s pod -l app.kubernetes.io/name=mariadb && \
+            kubectl wait --for=condition=Ready --timeout=300s pod -l app.kubernetes.io/name=biblioteca && \
             kubectl apply -f ./.github/tests/test_job.yaml --wait=true && \
             sleep 2 && \
             kubectl wait --for=condition=Complete --timeout=2m job/test-biblioteca || EXIT=1
