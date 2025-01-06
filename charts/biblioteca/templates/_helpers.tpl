@@ -75,13 +75,13 @@ Create environment variables used to configure the biblioteca container.
   {{- end }}
 {{- end }}
 - name: MESSENGER_TRANSPORT_DSN
-  value: {{ .Values.biblioteca.messengerTransportDSN }}
+  value: {{ .Values.biblioteca.messengerTransportDSN | quote }}
 - name: MAILER_DSN
-  value: {{ .Values.biblioteca.mailerDSN }}
+  value: {{ .Values.biblioteca.mailerDSN | quote }}
 - name: BOOK_FOLDER_NAMING_FORMAT
-  value: {{ .Values.biblioteca.bookFolderNamingFormat }}
+  value: {{ .Values.biblioteca.bookFolderNamingFormat | quote }}
 - name: BOOK_FILE_NAMING_FORMAT
-  value: {{ .Values.biblioteca.bookFileNamingFormat }}
+  value: {{ .Values.biblioteca.bookFileNamingFormat | quote }}
 {{- if .Values.biblioteca.extraEnv }}
 {{ toYaml .Values.biblioteca.extraEnv }}
 {{- end }}
