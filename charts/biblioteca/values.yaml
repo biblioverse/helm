@@ -55,9 +55,12 @@ lifecycle: {}
 biblioteca:
   # If web server is not binding default port, you can define it
   containerPort: 8080
-  datadir: /var/www/html/data
-  persistence:
-    subPath:
+
+  # Biblioteca configuration
+  mailerDSN: native://default
+  messengerTransportDSN: doctrine://default?auto_setup=0
+  bookFolderNamingFormat: "{authorFirst}/{author}/{title}/{serie}"
+  bookFileNamingFormat: "{serie}-{serieIndex}-{title}"
 
   ## Strategy used to replace old pods
   ## IMPORTANT: use with care, it is suggested to leave as that for upgrade purposes
