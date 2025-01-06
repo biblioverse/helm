@@ -128,9 +128,15 @@ jobs:
             kubectl apply -f ./.github/tests/test_job.yaml --wait=true && \
             sleep 2 && \
             kubectl wait --for=condition=Complete --timeout=2m job/test-biblioteca || EXIT=1
-            echo "Here's the logs from the job:"
+            echo ""
+            echo "------------------------------------------------------------"
+            echo "Job logs"
+            echo "------------------------------------------------------------"
             kubectl logs --ignore-errors --prefix --tail=-1 --all-containers=true -l batch.kubernetes.io/job-name=test-biblioteca
-            echo "Here's the logs from the biblioteca pod:"
+            echo ""
+            echo "------------------------------------------------------------"
+            echo "Biblioteca pod logs"
+            echo "------------------------------------------------------------"
             kubectl logs --ignore-errors --prefix -l app.kubernetes.io/name=biblioteca
             exit $EXIT
 

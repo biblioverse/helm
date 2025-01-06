@@ -18,10 +18,7 @@ spec:
             - |
               set -e
               echo "show login:"
-              curl \
-                -s \
-                -w "%{http_code}" \
-              "http://biblioteca.biblioteca.svc.cluster.local:8080/login" || exit 1;
+              curl -v "http://biblioteca.biblioteca.svc.cluster.local:8080/login" || exit 1;
               echo "done"
       containers:
         - name: final
