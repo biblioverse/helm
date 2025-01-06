@@ -108,6 +108,10 @@ jobs:
         uses: helm/kind-action@v1.12.0
         if: steps.list-changed.outputs.changed == 'true'
 
+      - name: Create biblioteca namespace
+        if: steps.list-changed.outputs.changed == 'true'
+        run: kubectl create namespace biblioteca
+
       - name: Run chart-testing (install ${{ matrix.test_cases.name }})
         id: install
         if: steps.list-changed.outputs.changed == 'true'
