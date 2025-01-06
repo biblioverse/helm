@@ -4,7 +4,7 @@ dependencies:
 - condition: mariadb.enabled
   name: mariadb
   repository: oci://registry-1.docker.io/bitnamicharts
-  version: 18.2.0
+  version: 20.2.1
 description: A comic books library
 home: https://biblioverse.github.io/biblioteca/
 keywords:
