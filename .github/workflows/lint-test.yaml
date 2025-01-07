@@ -130,14 +130,29 @@ jobs:
             kubectl wait --for=condition=Complete --timeout=2m job/test-biblioteca || EXIT=1
             echo ""
             echo "------------------------------------------------------------"
+            echo "Events"
+            echo "------------------------------------------------------------"
+            kubectl get events -o wide
+            echo ""
+            echo "------------------------------------------------------------"
+            echo "Pod Description"
+            echo "------------------------------------------------------------"
+            kubectl describe pod -l app.kubernetes.io/name=biblioteca
+            echo ""
+            echo "------------------------------------------------------------"
+            echo "Job description"
+            echo "------------------------------------------------------------"
+            kubectl describe job -l batch.kubernetes.io/job-name=test-biblioteca
+            echo ""
+            echo "------------------------------------------------------------"
             echo "Job logs"
             echo "------------------------------------------------------------"
-            kubectl logs --ignore-errors --prefix --tail=-1 --all-containers=true -l batch.kubernetes.io/job-name=test-biblioteca
+            kubectl logs --ignore-errors --prefix --tail=-1 --all-containers -l batch.kubernetes.io/job-name=test-biblioteca
             echo ""
             echo "------------------------------------------------------------"
             echo "Biblioteca pod logs"
             echo "------------------------------------------------------------"
-            kubectl logs --ignore-errors --prefix -l app.kubernetes.io/name=biblioteca
+            kubectl logs --ignore-errors --prefix --tail=-1 --all-containers -l app.kubernetes.io/name=biblioteca
             exit $EXIT
 
   summary:

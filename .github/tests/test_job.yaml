@@ -11,7 +11,7 @@ spec:
     spec:
       initContainers:
         - name: 01-show-login
-          image: curlimages/curl
+          image: curlimages/curl:latest
           command:
             - /bin/sh
             - -c
@@ -22,7 +22,7 @@ spec:
               echo "done"
       containers:
         - name: final
-          image: curlimages/curl
+          image: curlimages/curl:latest
           command:
             - /bin/sh
             - -c
