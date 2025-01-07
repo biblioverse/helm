@@ -70,7 +70,7 @@ jobs:
         test_cases:
           # test the helm chart with MariaDB subchart enabled
           - name: 'Default - no custom values'
-            helm_args: '--namespace biblioteca --skip-clean-up'
+            helm_args: '--namespace biblioteca --skip-clean-up --helm-extra-set-args "--set=fullnameOverride=biblioteca"'
             test: true
 
           # test the helm chart with external DB
