@@ -130,9 +130,9 @@ jobs:
             kubectl wait --for=condition=Complete --timeout=2m job/test-biblioteca || EXIT=1
             echo ""
             echo "------------------------------------------------------------"
-            echo "Events"
+            echo "Services"
             echo "------------------------------------------------------------"
-            kubectl get events -o wide
+            kubectl get service -o wide
             echo ""
             echo "------------------------------------------------------------"
             echo "Pod Description"
