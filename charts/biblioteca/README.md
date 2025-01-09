@@ -90,6 +90,10 @@ The following table lists the configurable parameters of the Biblioteca chart an
 | `biblioteca.messengerTransportDSN`                |                                                                                         | `doctrine://default?auto_setup=0`          |
 | `biblioteca.bookFolderNamingFormat`               |                                                                                         | `"{authorFirst}/{author}/{title}/{serie}"` |
 | `biblioteca.bookFileNamingFormat`                 |                                                                                         | `"{serie}-{serieIndex}-{title}"`           |
+| `biblioteca.ollama.url`                           | Specify the Url to your ollama installation                                             | `nil`                                      |
+| `biblioteca.ollama.model`                         | Specify the ollama model to use                                                         | `nil`                                      |
+| `biblioteca.openai.apiKey`                        | ApiKey for Open AI                                                                      | `nil`                                      |
+| `biblioteca.openai.model`                         | Specify the ollama model to use                                                         | `gpt-3.5-turbo`                            |
 | `biblioteca.extraEnv`                             | specify additional environment variables                                                | `{}`                                       |
 | `biblioteca.extraSidecarContainers`               | specify additional sidecar containers                                                   | `[]`                                       |
 | `biblioteca.extraInitContainers`                  | specify additional init containers                                                      | `[]`                                       |

@@ -82,6 +82,18 @@ Create environment variables used to configure the biblioteca container.
   value: {{ .Values.biblioteca.bookFolderNamingFormat | quote }}
 - name: BOOK_FILE_NAMING_FORMAT
   value: {{ .Values.biblioteca.bookFileNamingFormat | quote }}
+{{- if .Values.biblioteca.openai.apiKey }}
+- name: OPEN_AI_API_KEY
+  value: {{ .Values.biblioteca.openai.apiKey }}
+- name: OPEN_AI_MODEL
+  value: {{ .Values.biblioteca.openai.model }}
+{{- end }}
+{{- if .Values.biblioteca.ollama.url }}
+- name: OLLAMA_URL
+  value: {{ .Values.biblioteca.ollama.url }}
+- name: OLLAMA_MODEL
+  value: {{ .Values.biblioteca.ollama.model }}
+{{- end }}
 {{- if .Values.biblioteca.extraEnv }}
 {{ toYaml .Values.biblioteca.extraEnv }}
 {{- end }}
