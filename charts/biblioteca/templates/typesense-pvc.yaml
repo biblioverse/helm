@@ -1,0 +1,30 @@
+{{- if and .Values.typesense.enabled .Values.typesense.persistence.enabled (not .Values.typesense.persistence.existingClaim) }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ template "biblioteca.fullname" . }}-typesense
+  labels:
+    app.kubernetes.io/name: {{ include "biblioteca.name" . }}
+    helm.sh/chart: {{ include "biblioteca.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/component: typesense
+  annotations:
+    helm.sh/resource-policy: keep
+  {{- with .Values.typesense.persistence.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .Values.typesense.persistence.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.typesense.persistence.size | quote }}
+  {{- with .Values.typesense.persistence.storageClass }}
+  {{- if (eq "-" .) }}
+  storageClassName: ""
+  {{- else }}
+  storageClassName: "{{ . }}"
+  {{- end }}
+  {{- end }}
+{{- end }}

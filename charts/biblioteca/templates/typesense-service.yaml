@@ -1,0 +1,42 @@
+{{- if .Values.typesense.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "biblioteca.fullname" . }}-typesense
+  {{- with .Values.typesense.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  labels:
+    app.kubernetes.io/name: {{ include "biblioteca.name" . }}
+    helm.sh/chart: {{ include "biblioteca.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/component: typesense
+spec:
+  type: {{ .Values.typesense.service.type }}
+  {{- if (eq .Values.typesense.service.type "LoadBalancer") }}
+  {{- with .Values.typesense.service.loadBalancerIP }}
+  loadBalancerIP: {{ . }}
+  {{- end }}
+  {{- end }}
+  {{- with .Values.typesense.service.ipFamilies }}
+  ipFamilies:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.typesense.service.ipFamilyPolicy }}
+  ipFamilyPolicy: {{ . }}
+  {{- end }}
+  ports:
+    - port: {{ .Values.typesense.service.port }}
+      targetPort: {{ .Values.typesense.containerPort }}
+      protocol: TCP
+      name: http
+      {{- with .Values.typesense.service.nodePort }}
+      nodePort: {{ . }}
+      {{- end }}
+  selector:
+    app.kubernetes.io/name: {{ include "biblioteca.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/component: app
+{{- end }}

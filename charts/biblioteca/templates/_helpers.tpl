@@ -94,6 +94,34 @@ Create environment variables used to configure the biblioteca container.
 - name: OLLAMA_MODEL
   value: {{ .Values.biblioteca.ollama.model }}
 {{- end }}
+{{- if .Values.typesense.enabled }}
+- name: TYPESENSE_URL
+  value: {{ printf "http://%s-typesense:%s" (include "biblioteca.chart" .) .Values.typesense.containerPort }}
+- name: TYPESENSE_KEY
+  valueFrom:
+    secretKeyRef:
+    {{- if .Values.typesense.apiKeySecret.existingSecret.enabled }}
+      name: {{ .Values.typesense.apiKeySecret.existingSecret.secretName }}
+      key: {{ .Values.typesense.apiKeySecret.existingSecret.apiKeyKey }}
+    {{- else }}
+      name: {{ printf "%s-typesense-apikey" (include "biblioteca.chart" .) }}
+      key: "api-key"
+    {{- end }}
+{{- end }}
+{{- if .Values.externalTypesense.enabled }}
+- name: TYPESENSE_URL
+  value: {{ .Values.externalTypesense.url }}
+- name: TYPESENSE_KEY
+  valueFrom:
+    secretKeyRef:
+    {{- if .Values.externalTypesense.existingSecret.enabled }}
+      name: {{ .Values.externalTypesense.existingSecret.secretName }}
+      key: {{ .Values.externalTypesense.existingSecret.apiKeyKey }}
+    {{- else }}
+      name: {{ printf "%s-typesense-apikey" (include "biblioteca.chart" .) }}
+      key: "api-key"
+    {{- end }}
+{{- end }}
 {{- if .Values.biblioteca.extraEnv }}
 {{ toYaml .Values.biblioteca.extraEnv }}
 {{- end }}

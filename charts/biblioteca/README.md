@@ -84,7 +84,7 @@ The following table lists the configurable parameters of the Biblioteca chart an
 | `ingress.pathType`                                | The `PathType` to use in Ingress' `paths`                                               | `Prefix`                                   |
 | `ingress.tls`                                     | Ingress TLS configuration                                                               | `[]`                                       |
 | `biblioteca.update`                               | Trigger update if custom command is used                                                | `0`                                        |
-| `biblioteca.containerPort`                        | Customize container port when not running as root                                       | `80`                                       |
+| `biblioteca.containerPort`                        | Customize container port when not running as root                                       | `8080`                                     |
 | `biblioteca.strategy`                             | specifies the strategy used to replace old Pods by new ones                             | `type: Recreate`                           |
 | `biblioteca.mailerDSN`                            |                                                                                         | `native://default`                         |
 | `biblioteca.messengerTransportDSN`                |                                                                                         | `doctrine://default?auto_setup=0`          |
@@ -116,7 +116,95 @@ The following table lists the configurable parameters of the Biblioteca chart an
 | `deploymentAnnotations`                           | Annotations to be added at 'deployment' level                                           | not set                                    |
 | `podLabels`                                       | Labels to be added at 'pod' level                                                       | not set                                    |
 | `podAnnotations`                                  | Annotations to be added at 'pod' level                                                  | not set                                    |
+| `affinity`                               | Affinity for pod assignment                             | `{}`                                        |
+| `nodeSelector`                           | Node labels for pod assignment                          | `{}`                                        |
+| `tolerations`                            | Tolerations for pod assignment                          | `[]`                                        |
 | `dnsConfig`                                       | Custom dnsConfig for biblioteca containers                                              | `{}`                                       |
+
+### Typesense
+
+You can either use the embedded TypeSense deployment (`typesense.enabled`) or bring your own (`externalTypesense.enabled`).
+Only one should be enabled at a time.
+
+#### External Typesense
+
+| Parameter                                     | Description                                                                | Default   |
+| --------------------------------------------- | -------------------------------------------------------------------------- | --------- |
+| `externalTypesense.enabled`                   | Whether to use external TypeSense                                          | `false`   |
+| `externalTypesense.url`                       | URL to the external TypeSense. Example: `"http://your-typesense-url:8108"` | `""`      |
+| `externalTypesense.apiKey`                    | API Key to the external Typesense.                                         | `""`      |
+| `externalTypesense.existingSecret.enabled`    | Whether to use a existing secret or not                                    | `false`   |
+| `externalTypesense.existingSecret.secretName` | Name of the existing secret                                                | `nil`     |
+| `externalTypesense.existingSecret.apiKeyKey`  | Name of the key that contains the API Key                                  | `api-key` |
+
+#### Embedded Typesense
+
+| Parameter                                          | Description                                             | Default                                     |
+| -------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------- |
+| `typesense.enabled`                                | Whether to use the MariaDB chart                        | `true`                                      |
+| `typesense.service.type`                           | Kubernetes Service type                                 | `ClusterIP`                                 |
+| `typesense.service.loadBalancerIP`                 | LoadBalancerIp for service type LoadBalancer            | `""`                                        |
+| `typesense.service.annotations`                    | Annotations for service type                            | `{}`                                        |
+| `typesense.service.nodePort`                       | NodePort for service type NodePort                      | `nil`                                       |
+| `typesense.service.ipFamilies`                     | Set ipFamilies as in k8s service objects                | `nil`                                       |
+| `typesense.service.ipFamyPolicy`                   | define IP protocol bindings as in k8s service objects   | `nil`                                       |
+| `typesense.apiKeySecret.apiKey`                    | API Key to the external Typesense.                      | `""`                                        |
+| `typesense.apiKeySecret.existingSecret.enabled`    | Whether to use a existing secret or not                 | `false`                                     |
+| `typesense.apiKeySecret.existingSecret.secretName` | Name of the existing secret                             | `nil`                                       |
+| `typesense.apiKeySecret.existingSecret.apiKeyKey`  | Name of the key that contains the API Key               | `api-key`                                   |
+| `typesense.image.repository`                       | biblioteca Image name                                   | `...`                                       |
+| `typesense.image.tag`                              | biblioteca Image tag                                    | `...`                                       |
+| `typesense.image.pullPolicy`                       | Image pull policy                                       | `IfNotPresent`                              |
+| `typesense.image.pullSecrets`                      | Specify image pull secrets                              | `nil`                                       |
+| `typesense.containerPort`                          | Customize container port when not running as root       | `8108`                                      |
+| `typesense.podLabels`                              | Labels to be added at 'pod' level                       | not set                                     |
+| `typesense.podAnnotations`                         | Annotations to be added at 'pod' level                  | not set                                     |
+| `typesense.deploymentLabels`                       | Labels to be added at 'deployment' level                | not set                                     |
+| `typesense.deploymentAnnotations`                  | Annotations to be added at 'deployment' level           | not set                                     |
+| `typesense.lifecycle.postStartCommand`             | Specify deployment lifecycle hook postStartCommand      | `nil`                                       |
+| `typesense.lifecycle.preStopCommand`               | Specify deployment lifecycle hook preStopCommand        | `nil`                                       |
+| `typesense.extraArgs`                              | specify additional command arguments                    | `{}`                                        |
+| `typesense.extraEnv`                               | specify additional environment variables                | `{}`                                        |
+| `typesense.extraSidecarContainers`                 | specify additional sidecar containers                   | `[]`                                        |
+| `typesense.extraInitContainers`                    | specify additional init containers                      | `[]`                                        |
+| `typesense.extraVolumes`                           | specify additional volumes for the Biblioteca pod       | `{}`                                        |
+| `typesense.extraVolumeMounts`                      | specify additional volume mounts for the Biblioteca pod | `{}`                                        |
+| `typesense.persistence.enabled`                    | Enable persistence using PVC                            | `false`                                     |
+| `typesense.persistence.annotations`                | PVC annotations                                         | `{}`                                        |
+| `typesense.persistence.storageClass`               | PVC Storage Class for the volume                        | `nil` (uses alpha storage class annotation) |
+| `typesense.persistence.existingClaim`              | An Existing PVC name for the volume                     | `nil` (uses alpha storage class annotation) |
+| `typesense.persistence.accessMode`                 | PVC Access Mode for the volume                          | `ReadWriteOnce`                             |
+| `typesense.persistence.size`                       | PVC Storage Request for the volume                      | `1Gi`                                       |
+| `typesense.resources`                              | CPU/Memory resource requests/limits                     | `{}`                                        |
+| `typesense.affinity`                               | Affinity for pod assignment                             | `{}`                                        |
+| `typesense.nodeSelector`                           | Node labels for pod assignment                          | `{}`                                        |
+| `typesense.tolerations`                            | Tolerations for pod assignment                          | `[]`                                        |
+| `typesense.dnsConfig`                              | Custom dnsConfig for biblioteca containers              | `{}`                                        |
+
+##### Typesense Probes Configurations
+
+You can learn more in the [Configure Liveness, Readiness and Startup Probes Kubernetes docs](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/).
+
+| Parameter                                      | Description                                 | Default |
+| ---------------------------------------------- | ------------------------------------------- | ------- |
+| `typesense.livenessProbe.enabled`              | Turn on and off liveness probe              | `false` |
+| `typesense.livenessProbe.initialDelaySeconds`  | Delay before liveness probe is initiated    | `10`    |
+| `typesense.livenessProbe.periodSeconds`        | How often to perform the probe              | `10`    |
+| `typesense.livenessProbe.timeoutSeconds`       | When the probe times out                    | `5`     |
+| `typesense.livenessProbe.failureThreshold`     | Minimum consecutive failures for the probe  | `3`     |
+| `typesense.livenessProbe.successThreshold`     | Minimum consecutive successes for the probe | `1`     |
+| `typesense.readinessProbe.enabled`             | Turn on and off readiness probe             | `false` |
+| `typesense.readinessProbe.initialDelaySeconds` | Delay before readiness probe is initiated   | `10`    |
+| `typesense.readinessProbe.periodSeconds`       | How often to perform the probe              | `10`    |
+| `typesense.readinessProbe.timeoutSeconds`      | When the probe times out                    | `5`     |
+| `typesense.readinessProbe.failureThreshold`    | Minimum consecutive failures for the probe  | `3`     |
+| `typesense.readinessProbe.successThreshold`    | Minimum consecutive successes for the probe | `1`     |
+| `typesense.startupProbe.enabled`               | Turn on and off startup probe               | `false` |
+| `typesense.startupProbe.initialDelaySeconds`   | Delay before readiness probe is initiated   | `30`    |
+| `typesense.startupProbe.periodSeconds`         | How often to perform the probe              | `10`    |
+| `typesense.startupProbe.timeoutSeconds`        | When the probe times out                    | `5`     |
+| `typesense.startupProbe.failureThreshold`      | Minimum consecutive failures for the probe  | `30`    |
+| `typesense.startupProbe.successThreshold`      | Minimum consecutive successes for the probe | `1`     |
 
 ### Database Configurations
 
