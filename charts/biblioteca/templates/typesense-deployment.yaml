@@ -84,7 +84,7 @@ spec:
                 name: {{ .Values.typesense.apiKeySecret.existingSecret.secretName }}
                 key: {{ .Values.typesense.apiKeySecret.existingSecret.apiKeyKey }}
               {{- else }}
-                name: {{ printf "%s-typesense-apikey" (include "biblioteca.chart" .) }}
+                name: {{ printf "%s-typesense-apikey" (include "biblioteca.fullname" .) }}
                 key: "api-key"
               {{- end }}
           {{- if .Values.biblioteca.extraEnv }}

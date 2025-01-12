@@ -74,6 +74,18 @@ Create environment variables used to configure the biblioteca container.
   value: {{ .Values.externalDatabase.url | quote }}
   {{- end }}
 {{- end }}
+- name: APP_SECRET
+  {{- if .Values.biblioteca.appSecret.existingSecret.enabled }}
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.biblioteca.appSecret.existingSecret.secretName | default (printf "%s-appsecret" .Release.Name) }}
+      key: {{ .Values.biblioteca.appSecret.existingSecret.urlKey | default "app-secret" }}
+  {{- else }}
+  valueFrom:
+    secretKeyRef:
+      name: {{ printf "%s-appsecret" .Release.Name }}
+      key: "app-secret"
+  {{- end }}
 - name: MESSENGER_TRANSPORT_DSN
   value: {{ .Values.biblioteca.messengerTransportDSN | quote }}
 - name: MAILER_DSN
@@ -96,7 +108,7 @@ Create environment variables used to configure the biblioteca container.
 {{- end }}
 {{- if .Values.typesense.enabled }}
 - name: TYPESENSE_URL
-  value: {{ printf "http://%s-typesense:%s" (include "biblioteca.chart" .) .Values.typesense.containerPort }}
+  value: {{ printf "http://%s-typesense:%s" (include "biblioteca.fullname" .) .Values.typesense.containerPort }}
 - name: TYPESENSE_KEY
   valueFrom:
     secretKeyRef:
@@ -104,7 +116,7 @@ Create environment variables used to configure the biblioteca container.
       name: {{ .Values.typesense.apiKeySecret.existingSecret.secretName }}
       key: {{ .Values.typesense.apiKeySecret.existingSecret.apiKeyKey }}
     {{- else }}
-      name: {{ printf "%s-typesense-apikey" (include "biblioteca.chart" .) }}
+      name: {{ printf "%s-typesense-apikey" (include "biblioteca.fullname" .) }}
       key: "api-key"
     {{- end }}
 {{- end }}
@@ -118,7 +130,7 @@ Create environment variables used to configure the biblioteca container.
       name: {{ .Values.externalTypesense.existingSecret.secretName }}
       key: {{ .Values.externalTypesense.existingSecret.apiKeyKey }}
     {{- else }}
-      name: {{ printf "%s-typesense-apikey" (include "biblioteca.chart" .) }}
+      name: {{ printf "%s-typesense-apikey" (include "biblioteca.fullname" .) }}
       key: "api-key"
     {{- end }}
 {{- end }}
