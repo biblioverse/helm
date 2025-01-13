@@ -73,20 +73,24 @@ The command removes all the Kubernetes components associated with the chart and 
 
 This is the configuration of the Biblioteca app, check https://biblioverse.github.io/biblioteca/installing/dotenv-config/ for the details of each configuration.
 
-| Parameter                                          | Description                                 | Default                                    |
-| -------------------------------------------------- | ------------------------------------------- | ------------------------------------------ |
-| `biblioteca.appSecret.appSecret`                   | API Key to the external Typesense.          | `""`                                       |
-| `biblioteca.appSecret.existingSecret.enabled`      | Whether to use a existing secret or not     | `false`                                    |
-| `biblioteca.appSecret.existingSecret.secretName`   | Name of the existing secret                 | `nil`                                      |
-| `biblioteca.appSecret.existingSecret.appSecretKey` | Name of the key that contains the API Key   | `app-secret`                               |
-| `biblioteca.mailerDSN`                             |                                             | `native://default`                         |
-| `biblioteca.messengerTransportDSN`                 |                                             | `doctrine://default?auto_setup=0`          |
-| `biblioteca.bookFolderNamingFormat`                |                                             | `"{authorFirst}/{author}/{title}/{serie}"` |
-| `biblioteca.bookFileNamingFormat`                  |                                             | `"{serie}-{serieIndex}-{title}"`           |
-| `biblioteca.ollama.url`                            | Specify the Url to your ollama installation | `nil`                                      |
-| `biblioteca.ollama.model`                          | Specify the ollama model to use             | `nil`                                      |
-| `biblioteca.openai.apiKey`                         | ApiKey for Open AI                          | `nil`                                      |
-| `biblioteca.openai.model`                          | Specify the ollama model to use             | `gpt-3.5-turbo`                            |
+| Parameter                                          | Description                                                                                                                                                       | Default                                    |
+| -------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| `biblioteca.appSecret.appSecret`                   | A secret key used to secure the application. Make it unique!                                                                                                      | `""`                                       |
+| `biblioteca.appSecret.existingSecret.enabled`      | Whether to use a existing secret or not                                                                                                                           | `false`                                    |
+| `biblioteca.appSecret.existingSecret.secretName`   | Name of the existing secret                                                                                                                                       | `nil`                                      |
+| `biblioteca.appSecret.existingSecret.appSecretKey` | Name of the key that contains the API Key                                                                                                                         | `app-secret`                               |
+| `biblioteca.mailerDSN`                             | Currently not used.                                                                                                                                               | `native://default`                         |
+| `biblioteca.messengerTransportDSN`                 | Do not change it.                                                                                                                                                 | `doctrine://default?auto_setup=0`          |
+| `biblioteca.bookFolderNamingFormat`                | The format to use to name the folders where the books are stored. You can use the following placeholders: `{authorFirst}`, `{author}`, `{title}`, `{serie}`.      | `"{authorFirst}/{author}/{title}/{serie}"` |
+| `biblioteca.bookFileNamingFormat`                  |                                                                                                                                                                   | `"{serie}-{serieIndex}-{title}"`           |
+| `biblioteca.kobo.proxyUseDev`                      | If set to true, the kobo proxy will be used in development.                                                                                                       | `false`                                    |
+| `biblioteca.kobo.proxyUseEverywhere`               | If set to true, the kobo proxy will be used everywhere and all request will be forwarded to the original store.                                                   | `false`                                    |
+| `biblioteca.kobo.proxyEnabled`                     | If set to false, the kobo proxy will be disabled.                                                                                                                 | `true`                                     |
+| `biblioteca.allowBookRelocation`                   | If set to false, the books will not be moved to the correct folder when added to the library. This is useful if you want to manage the folder structure yourself. | `true`                                     |
+| `biblioteca.ollama.url`                            | Specify the Url to your ollama installation                                                                                                                       | `nil`                                      |
+| `biblioteca.ollama.model`                          | Specify the ollama model to use                                                                                                                                   | `nil`                                      |
+| `biblioteca.openai.apiKey`                         | ApiKey for Open AI                                                                                                                                                | `nil`                                      |
+| `biblioteca.openai.model`                          | Specify the ollama model to use                                                                                                                                   | `gpt-3.5-turbo`                            |
 
 ## Configuration
 
@@ -131,7 +135,7 @@ The following table lists the configurable parameters of the Biblioteca chart an
 | `pod.lifecycle.preStopCommand`             | Specify deployment lifecycle hook preStopCommand                                        | `nil`                                   |
 | `pod.resources`                            | CPU/Memory resource requests/limits                                                     | `{}`                                    |
 | `pod.labels`                               | Labels to be added at 'pod' level                                                       | not set                                 |
-| `pod.annotations`                           | Annotations to be added at 'pod' level                                                  | not set                                 |
+| `pod.annotations`                          | Annotations to be added at 'pod' level                                                  | not set                                 |
 | `pod.affinity`                             | Affinity for pod assignment                                                             | `{}`                                    |
 | `pod.nodeSelector`                         | Node labels for pod assignment                                                          | `{}`                                    |
 | `pod.tolerations`                          | Tolerations for pod assignment                                                          | `[]`                                    |

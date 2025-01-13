@@ -74,6 +74,8 @@ Create environment variables used to configure the biblioteca container.
   value: {{ .Values.externalDatabase.url | quote }}
   {{- end }}
 {{- end }}
+- name: APP_ENV
+  value: prod
 - name: APP_SECRET
   {{- if .Values.biblioteca.appSecret.existingSecret.enabled }}
   valueFrom:
@@ -106,6 +108,14 @@ Create environment variables used to configure the biblioteca container.
 - name: OLLAMA_MODEL
   value: {{ .Values.biblioteca.ollama.model }}
 {{- end }}
+- name: KOBO_PROXY_USE_DEV
+  value: "{{ if .Values.biblioteca.kobo.proxyUseDev }}1{{- else }}0{{- end }}"
+- name: KOBO_PROXY_USE_EVERYWHERE
+  value: "{{ if .Values.biblioteca.kobo.proxyUseEverywhere }}1{{- else }}0{{- end }}"
+- name: KOBO_PROXY_ENABLED
+  value: "{{ if .Values.biblioteca.kobo.proxyEnabled }}1{{- else }}0{{- end }}"
+- name: ALLOW_BOOK_RELOCATION
+  value: "{{ if .Values.biblioteca.allowBookRelocation }}1{{- else }}0{{- end }}"
 {{- if .Values.typesense.enabled }}
 - name: TYPESENSE_URL
   value: {{ printf "http://%s-typesense:%s" (include "biblioteca.fullname" .) .Values.typesense.containerPort }}

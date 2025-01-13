@@ -57,6 +57,13 @@ biblioteca:
     apiKey:
     model: gpt-3.5-turbo
 
+  kobo:
+    proxyUseDev: false
+    proxyUseEverywhere: false
+    proxyEnabled: true
+  
+  allowBookRelocation: true
+
   appSecret:
     appSecret: ""
     existingSecret:
