@@ -29,7 +29,7 @@ spec:
   {{- end }}
   ports:
     - port: {{ .Values.service.port }}
-      targetPort: {{ .Values.biblioteca.containerPort }}
+      targetPort: {{ .Values.containerPort }}
       protocol: TCP
       name: http
       {{- with .Values.service.nodePort }}

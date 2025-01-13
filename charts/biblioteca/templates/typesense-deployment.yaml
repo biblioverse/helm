@@ -87,7 +87,7 @@ spec:
                 name: {{ printf "%s-typesense-apikey" (include "biblioteca.fullname" .) }}
                 key: "api-key"
               {{- end }}
-          {{- if .Values.biblioteca.extraEnv }}
+          {{- if .Values.typesense.extraEnv }}
           {{ toYaml . | nindent 10 }}
           {{- end }}
           ports:

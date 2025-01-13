@@ -134,8 +134,8 @@ Create environment variables used to configure the biblioteca container.
       key: "api-key"
     {{- end }}
 {{- end }}
-{{- if .Values.biblioteca.extraEnv }}
-{{ toYaml .Values.biblioteca.extraEnv }}
+{{- if .Values.pod.extraEnv }}
+{{ toYaml .Values.pod.extraEnv }}
 {{- end }}
 {{- end -}}
 
@@ -150,7 +150,7 @@ Create volume mounts for the biblioteca container.
   mountPath: /var/www/html/public/covers
 - name: biblioteca-media-tmp
   mountPath: /var/www/html/public/media
-{{- if .Values.biblioteca.extraVolumeMounts }}
-{{ toYaml .Values.biblioteca.extraVolumeMounts }}
+{{- if .Values.pod.extraVolumeMounts }}
+{{ toYaml .Values.pod.extraVolumeMounts }}
 {{- end }}
 {{- end -}}

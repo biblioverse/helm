@@ -11,12 +11,6 @@ image:
 
 nameOverride: ""
 fullnameOverride: ""
-podAnnotations: {}
-deploymentAnnotations: {}
-deploymentLabels: {}
-
-# Number of replicas to be deployed
-replicaCount: 1
 
 ## Allowing use of ingress controllers
 ## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/
@@ -45,17 +39,10 @@ ingress:
   path: /
   pathType: Prefix
 
-
-# Allow configuration of lifecycle hooks
-# ref: https://kubernetes.io/docs/tasks/configure-pod-container/attach-handler-lifecycle-event/
-lifecycle: {}
-  # postStartCommand: []
-  # preStopCommand: []
+# If web server is not binding default port, you can define it
+containerPort: 8080
 
 biblioteca:
-  # If web server is not binding default port, you can define it
-  containerPort: 8080
-
   # Biblioteca configuration
   mailerDSN: native://default
   messengerTransportDSN: doctrine://default?auto_setup=0
@@ -77,6 +64,13 @@ biblioteca:
       secretName: ""
       appSecretKey: app-secret
 
+deployment:
+  annotations: {}
+  labels: {}
+
+  # Number of replicas to be deployed
+  replicaCount: 1
+
   ## Strategy used to replace old pods
   ## IMPORTANT: use with care, it is suggested to leave as that for upgrade purposes
   ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
@@ -86,6 +80,16 @@ biblioteca:
     # rollingUpdate:
     #   maxSurge: 1
     #   maxUnavailable: 0
+
+pod:
+  annotations: {}
+  labels: {}
+
+  # Allow configuration of lifecycle hooks
+  # ref: https://kubernetes.io/docs/tasks/configure-pod-container/attach-handler-lifecycle-event/
+  lifecycle: {}
+    # postStartCommand: []
+    # preStopCommand: []
 
   ##
   ## Extra environment variables
@@ -137,6 +141,31 @@ biblioteca:
     resources: {}
     # Set mariadb initContainer securityContext parameters. For example, you may need to define runAsNonRoot directive
     securityContext: {}
+
+  resources: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #  cpu: 100m
+    #  memory: 128Mi
+    # requests:
+    #  cpu: 100m
+    #  memory: 128Mi
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+  dnsConfig: {}
+  # Custom dns config for Biblioteca containers.
+  # You can for example configure ndots. This may be needed in some clusters with alpine images.
+  # options:
+  #   - name: ndots
+  #     value: "1"
 
 ##
 ## External database configuration
@@ -264,19 +293,6 @@ persistenceTmpMedia:
   accessMode: ReadWriteOnce
   size: 5Gi
 
-
-resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #  cpu: 100m
-  #  memory: 128Mi
-  # requests:
-  #  cpu: 100m
-  #  memory: 128Mi
-
 ## Liveness and readiness probe values
 ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
 ##
@@ -301,19 +317,6 @@ startupProbe:
   timeoutSeconds: 5
   failureThreshold: 30
   successThreshold: 1
-
-nodeSelector: {}
-
-tolerations: []
-
-affinity: {}
-
-dnsConfig: {}
-# Custom dns config for Biblioteca containers.
-# You can for example configure ndots. This may be needed in some clusters with alpine images.
-# options:
-#   - name: ndots
-#     value: "1"
 
 externalTypesense:
   enabled: false

@@ -4,7 +4,7 @@
 
 ## TL;DR;
 
-```console
+```bash
 helm repo add biblioverse https://biblioverse.github.io/helm/
 helm install my-release biblioverse/biblioteca
 ```
@@ -15,8 +15,14 @@ helm install my-release biblioverse/biblioteca
 - [Prerequisites](#prerequisites)
 - [Installing the Chart](#installing-the-chart)
 - [Uninstalling the Chart](#uninstalling-the-chart)
+- [Biblioteca Configuration](#biblioteca-configuration)
 - [Configuration](#configuration)
+  - [Typesense](#typesense)
+    - [External Typesense](#external-typesense)
+    - [Embedded Typesense](#embedded-typesense)
+      - [Typesense Probes Configuration](#typesense-probes-configurations)
   - [Database Configurations](#database-configurations)
+  - [Presistence Configurations](#persistence-configurations)
   - [Probes Configurations](#probes-configurations)
 
 ## Introduction
@@ -63,67 +69,73 @@ helm delete my-release
 
 The command removes all the Kubernetes components associated with the chart and deletes the release.
 
+## Biblioteca Configuration
+
+This is the configuration of the Biblioteca app, check https://biblioverse.github.io/biblioteca/installing/dotenv-config/ for the details of each configuration.
+
+| Parameter                                          | Description                                 | Default                                    |
+| -------------------------------------------------- | ------------------------------------------- | ------------------------------------------ |
+| `biblioteca.appSecret.appSecret`                   | API Key to the external Typesense.          | `""`                                       |
+| `biblioteca.appSecret.existingSecret.enabled`      | Whether to use a existing secret or not     | `false`                                    |
+| `biblioteca.appSecret.existingSecret.secretName`   | Name of the existing secret                 | `nil`                                      |
+| `biblioteca.appSecret.existingSecret.appSecretKey` | Name of the key that contains the API Key   | `app-secret`                               |
+| `biblioteca.mailerDSN`                             |                                             | `native://default`                         |
+| `biblioteca.messengerTransportDSN`                 |                                             | `doctrine://default?auto_setup=0`          |
+| `biblioteca.bookFolderNamingFormat`                |                                             | `"{authorFirst}/{author}/{title}/{serie}"` |
+| `biblioteca.bookFileNamingFormat`                  |                                             | `"{serie}-{serieIndex}-{title}"`           |
+| `biblioteca.ollama.url`                            | Specify the Url to your ollama installation | `nil`                                      |
+| `biblioteca.ollama.model`                          | Specify the ollama model to use             | `nil`                                      |
+| `biblioteca.openai.apiKey`                         | ApiKey for Open AI                          | `nil`                                      |
+| `biblioteca.openai.model`                          | Specify the ollama model to use             | `gpt-3.5-turbo`                            |
+
 ## Configuration
 
 The following table lists the configurable parameters of the Biblioteca chart and their default values.
 
-| Parameter                                          | Description                                                                             | Default                                    |
-| -------------------------------------------------- | --------------------------------------------------------------------------------------- | ------------------------------------------ |
-| `image.repository`                                 | biblioteca Image name                                                                   | `ghcr.io/biblioverse/biblioteca-docker`    |
-| `image.tag`                                        | biblioteca Image tag                                                                    | `appVersion`                               |
-| `image.pullPolicy`                                 | Image pull policy                                                                       | `IfNotPresent`                             |
-| `image.pullSecrets`                                | Specify image pull secrets                                                              | `nil`                                      |
-| `replicaCount`                                     | Number of biblioteca pods to deploy                                                     | `1`                                        |
-| `ingress.className`                                | Name of the ingress class to use                                                        | `nil`                                      |
-| `ingress.host`                                     | Host Ingress                                                                            | `nil`                                      |
-| `ingress.enabled`                                  | Enable use of ingress controllers                                                       | `false`                                    |
-| `ingress.servicePort`                              | Ingress' backend servicePort                                                            | `http`                                     |
-| `ingress.annotations`                              | An array of service annotations                                                         | `nil`                                      |
-| `ingress.labels`                                   | An array of service labels                                                              | `nil`                                      |
-| `ingress.path`                                     | The `Path` to use in Ingress' `paths`                                                   | `/`                                        |
-| `ingress.pathType`                                 | The `PathType` to use in Ingress' `paths`                                               | `Prefix`                                   |
-| `ingress.tls`                                      | Ingress TLS configuration                                                               | `[]`                                       |
-| `biblioteca.update`                                | Trigger update if custom command is used                                                | `0`                                        |
-| `biblioteca.containerPort`                         | Customize container port when not running as root                                       | `8080`                                     |
-| `biblioteca.strategy`                              | specifies the strategy used to replace old Pods by new ones                             | `type: Recreate`                           |
-| `biblioteca.appSecret.appSecret`                   | API Key to the external Typesense.                                                      | `""`                                       |
-| `biblioteca.appSecret.existingSecret.enabled`      | Whether to use a existing secret or not                                                 | `false`                                    |
-| `biblioteca.appSecret.existingSecret.secretName`   | Name of the existing secret                                                             | `nil`                                      |
-| `biblioteca.appSecret.existingSecret.appSecretKey` | Name of the key that contains the API Key                                               | `app-secret`                               |
-| `biblioteca.mailerDSN`                             |                                                                                         | `native://default`                         |
-| `biblioteca.messengerTransportDSN`                 |                                                                                         | `doctrine://default?auto_setup=0`          |
-| `biblioteca.bookFolderNamingFormat`                |                                                                                         | `"{authorFirst}/{author}/{title}/{serie}"` |
-| `biblioteca.bookFileNamingFormat`                  |                                                                                         | `"{serie}-{serieIndex}-{title}"`           |
-| `biblioteca.ollama.url`                            | Specify the Url to your ollama installation                                             | `nil`                                      |
-| `biblioteca.ollama.model`                          | Specify the ollama model to use                                                         | `nil`                                      |
-| `biblioteca.openai.apiKey`                         | ApiKey for Open AI                                                                      | `nil`                                      |
-| `biblioteca.openai.model`                          | Specify the ollama model to use                                                         | `gpt-3.5-turbo`                            |
-| `biblioteca.extraEnv`                              | specify additional environment variables                                                | `{}`                                       |
-| `biblioteca.extraSidecarContainers`                | specify additional sidecar containers                                                   | `[]`                                       |
-| `biblioteca.extraInitContainers`                   | specify additional init containers                                                      | `[]`                                       |
-| `biblioteca.extraVolumes`                          | specify additional volumes for the Biblioteca pod                                       | `{}`                                       |
-| `biblioteca.extraVolumeMounts`                     | specify additional volume mounts for the Biblioteca pod                                 | `{}`                                       |
-| `biblioteca.mariaDbInitContainer.resources`        | set the `resources` field of the MariaDB init container in the Biblioteca Pod.          | `{}`                                       |
-| `biblioteca.mariaDbInitContainer.securityContext`  | set the `securityContext` field of the MariaDB init container in the Biblioteca Pod.    | `{}`                                       |
-| `biblioteca.securityContext`                       | Optional security context for the Biblioteca container                                  | `nil`                                      |
-| `biblioteca.podSecurityContext`                    | Optional security context for the Biblioteca pod (applies to all containers in the pod) | `nil`                                      |
-| `lifecycle.postStartCommand`                       | Specify deployment lifecycle hook postStartCommand                                      | `nil`                                      |
-| `lifecycle.preStopCommand`                         | Specify deployment lifecycle hook preStopCommand                                        | `nil`                                      |
-| `service.type`                                     | Kubernetes Service type                                                                 | `ClusterIP`                                |
-| `service.loadBalancerIP`                           | LoadBalancerIp for service type LoadBalancer                                            | `""`                                       |
-| `service.annotations`                              | Annotations for service type                                                            | `{}`                                       |
-| `service.nodePort`                                 | NodePort for service type NodePort                                                      | `nil`                                      |
-| `service.ipFamilies`                               | Set ipFamilies as in k8s service objects                                                | `nil`                                      |
-| `service.ipFamyPolicy`                             | define IP protocol bindings as in k8s service objects                                   | `nil`                                      |
-| `resources`                                        | CPU/Memory resource requests/limits                                                     | `{}`                                       |
-| `deploymentLabels`                                 | Labels to be added at 'deployment' level                                                | not set                                    |
-| `deploymentAnnotations`                            | Annotations to be added at 'deployment' level                                           | not set                                    |
-| `podLabels`                                        | Labels to be added at 'pod' level                                                       | not set                                    |
-| `podAnnotations`                                   | Annotations to be added at 'pod' level                                                  | not set                                    |
-| `affinity`                                         | Affinity for pod assignment                                                             | `{}`                                       |
-| `nodeSelector`                                     | Node labels for pod assignment                                                          | `{}`                                       |
-| `tolerations`                                      | Tolerations for pod assignment                                                          | `[]`                                       |
-| `dnsConfig`                                        | Custom dnsConfig for biblioteca containers                                              | `{}`                                       |
+| Parameter                                  | Description                                                                             | Default                                 |
+| ------------------------------------------ | --------------------------------------------------------------------------------------- | --------------------------------------- |
+| `image.repository`                         | biblioteca Image name                                                                   | `ghcr.io/biblioverse/biblioteca-docker` |
+| `image.tag`                                | biblioteca Image tag                                                                    | `appVersion`                            |
+| `image.pullPolicy`                         | Image pull policy                                                                       | `IfNotPresent`                          |
+| `image.pullSecrets`                        | Specify image pull secrets                                                              | `nil`                                   |
+| `service.type`                             | Kubernetes Service type                                                                 | `ClusterIP`                             |
+| `service.loadBalancerIP`                   | LoadBalancerIp for service type LoadBalancer                                            | `""`                                    |
+| `service.annotations`                      | Annotations for service type                                                            | `{}`                                    |
+| `service.nodePort`                         | NodePort for service type NodePort                                                      | `nil`                                   |
+| `service.ipFamilies`                       | Set ipFamilies as in k8s service objects                                                | `nil`                                   |
+| `service.ipFamyPolicy`                     | define IP protocol bindings as in k8s service objects                                   | `nil`                                   |
+| `ingress.className`                        | Name of the ingress class to use                                                        | `nil`                                   |
+| `ingress.host`                             | Host Ingress                                                                            | `nil`                                   |
+| `ingress.enabled`                          | Enable use of ingress controllers                                                       | `false`                                 |
+| `ingress.servicePort`                      | Ingress' backend servicePort                                                            | `http`                                  |
+| `ingress.annotations`                      | An array of service annotations                                                         | `nil`                                   |
+| `ingress.labels`                           | An array of service labels                                                              | `nil`                                   |
+| `ingress.path`                             | The `Path` to use in Ingress' `paths`                                                   | `/`                                     |
+| `ingress.pathType`                         | The `PathType` to use in Ingress' `paths`                                               | `Prefix`                                |
+| `ingress.tls`                              | Ingress TLS configuration                                                               | `[]`                                    |
+| `containerPort`                            | Customize container port when not running as root                                       | `8080`                                  |
+| `deployment.strategy`                      | specifies the strategy used to replace old Pods by new ones                             | `type: Recreate`                        |
+| `deployment.replicaCount`                  | Number of biblioteca pods to deploy                                                     | `1`                                     |
+| `deployment.labels`                        | Labels to be added at 'deployment' level                                                | not set                                 |
+| `deployment.annotations`                   | Annotations to be added at 'deployment' level                                           | not set                                 |
+| `pod.extraEnv`                             | specify additional environment variables                                                | `{}`                                    |
+| `pod.extraSidecarContainers`               | specify additional sidecar containers                                                   | `[]`                                    |
+| `pod.extraInitContainers`                  | specify additional init containers                                                      | `[]`                                    |
+| `pod.extraVolumes`                         | specify additional volumes for the Biblioteca pod                                       | `{}`                                    |
+| `pod.extraVolumeMounts`                    | specify additional volume mounts for the Biblioteca pod                                 | `{}`                                    |
+| `pod.mariaDbInitContainer.resources`       | set the `resources` field of the MariaDB init container in the Biblioteca Pod.          | `{}`                                    |
+| `pod.mariaDbInitContainer.securityContext` | set the `securityContext` field of the MariaDB init container in the Biblioteca Pod.    | `{}`                                    |
+| `pod.securityContext`                      | Optional security context for the Biblioteca container                                  | `nil`                                   |
+| `pod.podSecurityContext`                   | Optional security context for the Biblioteca pod (applies to all containers in the pod) | `nil`                                   |
+| `pod.lifecycle.postStartCommand`           | Specify deployment lifecycle hook postStartCommand                                      | `nil`                                   |
+| `pod.lifecycle.preStopCommand`             | Specify deployment lifecycle hook preStopCommand                                        | `nil`                                   |
+| `pod.resources`                            | CPU/Memory resource requests/limits                                                     | `{}`                                    |
+| `pod.labels`                               | Labels to be added at 'pod' level                                                       | not set                                 |
+| `pod.annotations`                           | Annotations to be added at 'pod' level                                                  | not set                                 |
+| `pod.affinity`                             | Affinity for pod assignment                                                             | `{}`                                    |
+| `pod.nodeSelector`                         | Node labels for pod assignment                                                          | `{}`                                    |
+| `pod.tolerations`                          | Tolerations for pod assignment                                                          | `[]`                                    |
+| `pod.dnsConfig`                            | Custom dnsConfig for biblioteca containers                                              | `{}`                                    |
 
 ### Typesense
 
