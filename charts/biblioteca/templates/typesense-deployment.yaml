@@ -56,7 +56,6 @@ spec:
             - {{ . | quote }}
             {{- end}}
             {{- end }}
-          image: typesense/typesense:27.1
           name: {{ .Chart.Name }}-typesense
           image: {{ printf "%s:%s" .Values.typesense.image.repository .Values.typesense.image.tag }}
           imagePullPolicy: {{ .Values.typesense.image.pullPolicy }}

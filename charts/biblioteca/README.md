@@ -172,8 +172,8 @@ Only one should be enabled at a time.
 | `typesense.apiKeySecret.existingSecret.enabled`    | Whether to use a existing secret or not                 | `false`                                     |
 | `typesense.apiKeySecret.existingSecret.secretName` | Name of the existing secret                             | `nil`                                       |
 | `typesense.apiKeySecret.existingSecret.apiKeyKey`  | Name of the key that contains the API Key               | `api-key`                                   |
-| `typesense.image.repository`                       | biblioteca Image name                                   | `...`                                       |
-| `typesense.image.tag`                              | biblioteca Image tag                                    | `...`                                       |
+| `typesense.image.repository`                       | biblioteca Image name                                   | `"typesense/typesense"`                     |
+| `typesense.image.tag`                              | biblioteca Image tag                                    | `"27.1"`                                    |
 | `typesense.image.pullPolicy`                       | Image pull policy                                       | `IfNotPresent`                              |
 | `typesense.image.pullSecrets`                      | Specify image pull secrets                              | `nil`                                       |
 | `typesense.containerPort`                          | Customize container port when not running as root       | `8108`                                      |
