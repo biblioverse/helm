@@ -35,6 +35,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
       annotations:
+        checksum/typesenseSecret: {{ include (print $.Template.BasePath "/typesense-secret.yaml") . | sha256sum }}
         {{- with .Values.typesense.podAnnotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
