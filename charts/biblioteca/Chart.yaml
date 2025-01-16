@@ -18,4 +18,4 @@ name: biblioteca
 sources:
 - https://github.com/biblioverse/helm
 - https://github.com/biblioverse/biblioteca-docker
-version: 0.1.0
+version: 0.2.0
