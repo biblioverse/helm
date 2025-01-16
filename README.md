@@ -7,7 +7,7 @@
 To install the repo just run:
 
 ```bash
-helm repo add biblioteca https://biblioverse.github.io/helm/
+helm repo add biblioverse https://biblioverse.github.io/helm/
 helm repo update
 ```
 
