@@ -1,0 +1,21 @@
+apiVersion: v2
+appVersion: 0.9.0
+dependencies:
+- condition: mariadb.enabled
+  name: mariadb
+  repository: oci://registry-1.docker.io/bitnamicharts
+  version: 20.2.1
+description: A comic books library
+home: https://biblioverse.github.io/biblioteca/
+keywords:
+- comics
+- ebooks
+- php
+maintainers:
+  - name: onigoetz
+    email: stephane.goetz@onigoetz.ch
+name: biblioteca
+sources:
+- https://github.com/biblioverse/helm
+- https://github.com/biblioverse/biblioteca-docker
+version: 0.1.0

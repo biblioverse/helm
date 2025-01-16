@@ -2,11 +2,11 @@ name: Lint and Test Charts
 
 on:
   pull_request:
-    paths:
+    types: [opened, reopened]
 
 jobs:
   changes:
-    runs-on: ubuntu-latest-low
+    runs-on: ubuntu-24.04
 
     outputs:
       src: ${{ steps.changes.outputs.src}}
@@ -23,7 +23,7 @@ jobs:
               - 'charts/biblioteca/templates/**'
 
   lint:
-    runs-on: ubuntu-latest-low
+    runs-on: ubuntu-24.04
     needs: changes
     if: needs.changes.outputs.src != 'false'
     steps:
@@ -68,16 +68,14 @@ jobs:
       matrix:
         # each item in this list is a job with an isolated test VM
         test_cases:
-          # test the plain helm chart with nothing changed
+          # test the helm chart with MariaDB subchart enabled
           - name: 'Default - no custom values'
+            helm_args: '--namespace biblioteca --skip-clean-up --helm-extra-set-args "--set=fullnameOverride=biblioteca"'
+            test: true
 
-          # test the helm chart with postgresql subchart enabled
-          - name: PostgreSQL Enabled
-            helm_args: '--helm-extra-set-args "--values charts/biblioteca/test-values/postgresql.yaml"'
-
-          # test the helm chart with nginx container enabled
-          - name: Nginx Enabled
-            helm_args: '--helm-extra-set-args "--values charts/biblioteca/test-values/nginx.yaml"'
+          # test the helm chart with external DB
+          - name: External DB
+            helm_args: '--helm-extra-set-args "--values charts/biblioteca/test-values/external_db.yaml"'
 
 
     steps:
@@ -110,6 +108,10 @@ jobs:
         uses: helm/kind-action@v1.12.0
         if: steps.list-changed.outputs.changed == 'true'
 
+      - name: Create biblioteca namespace
+        if: steps.list-changed.outputs.changed == 'true'
+        run: kubectl create namespace biblioteca
+
       - name: Run chart-testing (install ${{ matrix.test_cases.name }})
         id: install
         if: steps.list-changed.outputs.changed == 'true'
@@ -121,17 +123,40 @@ jobs:
         run: |
             EXIT=0
             kubectl config set-context --current --namespace=biblioteca && \
+            kubectl wait --for=condition=Ready --timeout=300s pod -l app.kubernetes.io/name=mariadb && \
+            kubectl wait --for=condition=Ready --timeout=300s pod -l app.kubernetes.io/name=biblioteca && \
             kubectl apply -f ./.github/tests/test_job.yaml --wait=true && \
             sleep 2 && \
             kubectl wait --for=condition=Complete --timeout=2m job/test-biblioteca || EXIT=1
-            echo "Here's the logs from the job:"
-            kubectl logs --ignore-errors --prefix --tail=-1 --all-containers=true -l batch.kubernetes.io/job-name=test-biblioteca
-            echo "Here's the logs from the biblioteca pod:"
-            kubectl logs --ignore-errors --prefix -l app.kubernetes.io/name=biblioteca
+            echo ""
+            echo "------------------------------------------------------------"
+            echo "Services"
+            echo "------------------------------------------------------------"
+            kubectl get service -o wide
+            echo ""
+            echo "------------------------------------------------------------"
+            echo "Pod Description"
+            echo "------------------------------------------------------------"
+            kubectl describe pod -l app.kubernetes.io/name=biblioteca
+            echo ""
+            echo "------------------------------------------------------------"
+            echo "Job description"
+            echo "------------------------------------------------------------"
+            kubectl describe job -l batch.kubernetes.io/job-name=test-biblioteca
+            echo ""
+            echo "------------------------------------------------------------"
+            echo "Job logs"
+            echo "------------------------------------------------------------"
+            kubectl logs --ignore-errors --prefix --tail=-1 --all-containers -l batch.kubernetes.io/job-name=test-biblioteca
+            echo ""
+            echo "------------------------------------------------------------"
+            echo "Biblioteca pod logs"
+            echo "------------------------------------------------------------"
+            kubectl logs --ignore-errors --prefix --tail=-1 --all-containers -l app.kubernetes.io/name=biblioteca
             exit $EXIT
 
   summary:
-    runs-on: ubuntu-latest-low
+    runs-on: ubuntu-24.04
     needs: [changes, test]
     if: always()
     steps:

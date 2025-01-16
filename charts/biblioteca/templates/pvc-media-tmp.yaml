@@ -1,0 +1,30 @@
+{{- if and .Values.persistenceTmpMedia.enabled (not .Values.persistenceTmpMedia.existingClaim) }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ template "biblioteca.fullname" . }}-media-tmp
+  labels:
+    app.kubernetes.io/name: {{ include "biblioteca.name" . }}
+    helm.sh/chart: {{ include "biblioteca.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/component: app
+  annotations:
+    helm.sh/resource-policy: keep
+  {{- with .Values.persistenceTmpMedia.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .Values.persistenceTmpMedia.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.persistenceTmpMedia.size | quote }}
+  {{- with .Values.persistenceTmpMedia.storageClass }}
+  {{- if (eq "-" .) }}
+  storageClassName: ""
+  {{- else }}
+  storageClassName: "{{ . }}"
+  {{- end }}
+  {{- end }}
+{{- end }}
