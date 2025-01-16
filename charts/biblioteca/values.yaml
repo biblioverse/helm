@@ -61,7 +61,7 @@ biblioteca:
     proxyUseDev: false
     proxyUseEverywhere: false
     proxyEnabled: true
-  
+
   allowBookRelocation: true
 
   appSecret:
