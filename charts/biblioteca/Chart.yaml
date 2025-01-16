@@ -1,4 +1,5 @@
 apiVersion: v2
+# renovate: image=ghcr.io/biblioverse/biblioteca
 appVersion: 0.9.0
 dependencies:
 - condition: mariadb.enabled
