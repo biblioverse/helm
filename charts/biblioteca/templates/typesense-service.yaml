@@ -38,5 +38,5 @@ spec:
   selector:
     app.kubernetes.io/name: {{ include "biblioteca.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/component: app
+    app.kubernetes.io/component: typesense
 {{- end }}

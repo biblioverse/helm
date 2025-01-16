@@ -49,7 +49,10 @@ spec:
         - args:
             - --data-dir
             - /data
-            - "--api-key=$(API_KEY)"
+            - --api-key
+            - "$(API_KEY)"
+            - --api-port
+            - {{ .Values.typesense.containerPort | quote }}
             - --enable-cors
             {{- with .Values.typesense.extraArgs }}
             {{- range . }}

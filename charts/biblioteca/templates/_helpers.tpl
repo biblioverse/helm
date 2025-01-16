@@ -118,7 +118,7 @@ Create environment variables used to configure the biblioteca container.
   value: "{{ if .Values.biblioteca.allowBookRelocation }}1{{- else }}0{{- end }}"
 {{- if .Values.typesense.enabled }}
 - name: TYPESENSE_URL
-  value: {{ printf "http://%s-typesense:%s" (include "biblioteca.fullname" .) .Values.typesense.containerPort }}
+  value: {{ printf "http://%s-typesense:%d" (include "biblioteca.fullname" .) (.Values.typesense.containerPort | int) }}
 - name: TYPESENSE_KEY
   valueFrom:
     secretKeyRef:

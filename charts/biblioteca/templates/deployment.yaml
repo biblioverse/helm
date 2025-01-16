@@ -35,6 +35,10 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
       annotations:
+        # redeploy if the secrets change
+        checksum/appSecret: {{ include (print $.Template.BasePath "/app-secret.yaml") . | sha256sum }}
+        checksum/typesenseSecret: {{ include (print $.Template.BasePath "/typesense-secret.yaml") . | sha256sum }}
+        checksum/typesenseSecretExternal: {{ include (print $.Template.BasePath "/typesense-secret-external.yaml") . | sha256sum }}
         {{- with .Values.pod.annotations }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
