@@ -1,8 +1,10 @@
 name: Renovate
 on:
   schedule:
-    # This should be every hour
-    - cron: '0 * * * *'
+    # Run twice a day on weekdays
+    - cron: '24 8,18 * * 1-5'
+    # Run every 4 hours on weekends
+    - cron: '24 */4 * * 0,6'
   push:
     branches:
       - main
