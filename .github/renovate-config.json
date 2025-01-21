@@ -5,7 +5,7 @@
   "gitAuthor": "Renovate Bot <bot@renovateapp.com>",
   "platform": "github",
   "repositories": ["biblioverse/helm"],
-  "allowedPostUpgradeCommands": ["^scripts"],
+  "allowedPostUpgradeCommands": ["^bash scripts"],
   "branchPrefix": "renovate-workflow/",
   "requireConfig": "ignored",
   "extends": [
