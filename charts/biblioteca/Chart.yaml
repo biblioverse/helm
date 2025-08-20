@@ -1,11 +1,11 @@
 apiVersion: v2
 # renovate: image=ghcr.io/biblioverse/biblioteca
-appVersion: 0.13.7
+appVersion: 0.13.12
 dependencies:
 - condition: mariadb.enabled
   name: mariadb
   repository: oci://registry-1.docker.io/bitnamicharts
-  version: 20.5.6
+  version: 20.5.9
 description: A comic books library
 home: https://biblioverse.github.io/biblioteca/
 keywords:
@@ -19,4 +19,4 @@ name: biblioteca
 sources:
 - https://github.com/biblioverse/helm
 - https://github.com/biblioverse/biblioteca-docker
-version: 0.7.5
+version: 0.7.7
