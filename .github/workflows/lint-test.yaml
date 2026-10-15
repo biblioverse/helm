@@ -35,14 +35,14 @@ jobs:
       - name: Install Helm
         uses: azure/setup-helm@v4
         with:
-          version: v3.22.0
+          version: v3.22.1
 
       - name: Add dependency chart repos
         run: |
           helm repo add bitnami https://charts.bitnami.com/bitnami
 
       - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.8.0
+        uses: helm/chart-testing-action@v2.9.0
 
       - name: Run chart-testing (list-changed)
         id: list-changed
@@ -87,14 +87,14 @@ jobs:
       - name: Install Helm
         uses: azure/setup-helm@v4
         with:
-          version: v3.22.0
+          version: v3.22.1
 
       - name: Add dependency chart repos
         run: |
           helm repo add bitnami https://charts.bitnami.com/bitnami
 
       - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.8.0
+        uses: helm/chart-testing-action@v2.9.0
 
       - name: Run chart-testing (list-changed)
         id: list-changed
@@ -105,7 +105,7 @@ jobs:
           fi
 
       - name: Create kind cluster
-        uses: helm/kind-action@v1.15.0
+        uses: helm/kind-action@v1.15.1
         if: steps.list-changed.outputs.changed == 'true'
 
       - name: Create biblioteca namespace
