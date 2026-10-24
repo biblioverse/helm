@@ -2,6 +2,31 @@ apiVersion: v1
 entries:
   biblioteca:
   - apiVersion: v2
+    appVersion: 0.18.0
+    created: "2026-10-24T06:39:16.592388955Z"
+    dependencies:
+    - condition: mariadb.enabled
+      name: mariadb
+      repository: oci://registry-1.docker.io/bitnamicharts
+      version: 20.5.9
+    description: A comic books library
+    digest: 3d28e752e4dba39d2a0f8a77504b098ad31ff1fbe5480984608ca059a68ffd86
+    home: https://biblioverse.github.io/biblioteca/
+    keywords:
+    - comics
+    - ebooks
+    - php
+    maintainers:
+    - email: stephane.goetz@onigoetz.ch
+      name: onigoetz
+    name: biblioteca
+    sources:
+    - https://github.com/biblioverse/helm
+    - https://github.com/biblioverse/biblioteca-docker
+    urls:
+    - https://github.com/biblioverse/helm/releases/download/biblioteca-0.8.0/biblioteca-0.8.0.tgz
+    version: 0.8.0
+  - apiVersion: v2
     appVersion: 0.13.12
     created: "2025-08-20T17:29:35.453812691Z"
     dependencies:
@@ -301,4 +326,4 @@ entries:
     urls:
     - https://github.com/biblioverse/helm/releases/download/biblioteca-0.1.0/biblioteca-0.1.0.tgz
     version: 0.1.0
-generated: "2025-08-20T17:29:35.453866873Z"
+generated: "2026-10-24T06:39:16.592441282Z"
